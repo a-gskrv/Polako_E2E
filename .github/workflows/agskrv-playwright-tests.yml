@@ -4,12 +4,13 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - master
-      - dev
+      - develop
+      - 'agskrv/**'
 
   pull_request:
     branches:
-      - master
+      - develop
+      - 'agskrv/**'
 
 jobs:
   test:
