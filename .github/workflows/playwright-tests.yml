@@ -1,0 +1,78 @@
+name: Playwright E2E Tests
+
+on:
+  push:
+    branches:
+      - develop
+      - master
+    paths:
+      - 'TP_Polako_E2E/**'
+      - '.github/workflows/playwright*'
+  pull_request:
+    branches:
+      - develop
+      - master
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Run E2E Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    defaults:
+      run:
+        working-directory: TP_Polako_E2E
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Install Playwright Browsers
+        run: |
+          pip install playwright
+          playwright install --with-deps chromium
+
+      - name: Create .env file
+        run: |
+          cat > .env << EOF
+          STG_URL=${{ secrets.STG_URL }}
+          SIMPLE_USER_EMAIL=${{ secrets.SIMPLE_USER_EMAIL }}
+          SIMPLE_USER_PASSWORD=${{ secrets.SIMPLE_USER_PASSWORD }}
+          VALID_EMAIL=${{ secrets.VALID_EMAIL }}
+          VALID_PASSWORD=${{ secrets.VALID_PASSWORD }}
+          HEADLESS=true
+          EOF
+
+      - name: Run Pytest
+        env:
+          STG_URL: ${{ secrets.STG_URL }}
+          SIMPLE_USER_EMAIL: ${{ secrets.SIMPLE_USER_EMAIL }}
+          SIMPLE_USER_PASSWORD: ${{ secrets.SIMPLE_USER_PASSWORD }}
+          VALID_EMAIL: ${{ secrets.VALID_EMAIL }}
+          VALID_PASSWORD: ${{ secrets.VALID_PASSWORD }}
+          HEADLESS: "true"
+          PYTHONPATH: ${{ github.workspace }}
+        run: |
+          python -m pytest tests -v
+
+      - name: Upload Test Artifacts (Traces, Videos, Screenshots)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-artifacts
+          path: TP_Polako_E2E/artifacts/
+          retention-days: 7

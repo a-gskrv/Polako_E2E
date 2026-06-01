@@ -17,6 +17,8 @@ WITHDRAW_BTN = 'nav a[href*="withdraw"]'
 PUBLICATIONS_BTN = 'nav a[href*="publications"]'
 MANAGE_BTN = 'nav a[href*="manage"]'
 
+CLOSE_MODAL_BTN = 'div.fixed.inset-0 button'
+
 
 class ManagerProfilePage(UserProfilePage):
     # BADGES
@@ -100,3 +102,11 @@ class ManagerProfilePage(UserProfilePage):
 
     def verify_manage_btn_visible(self):
         self.page.locator(MANAGE_BTN).wait_for(state="visible")
+
+    def close_modal(self):
+        modal = self.page.locator(CLOSE_MODAL_BTN)
+        try:
+            if modal.is_visible(timeout=5000):
+                modal.click()
+        except:
+            pass

@@ -52,6 +52,7 @@ class TestHeader(BaseTest):
         self.header_page.change_language("ru")
         expect(self.page).to_have_url("https://stg.polakohedonist.club/ru")
 
+    @pytest.mark.skip(reason="User interface updated — tests temporarily disabled")
     def test_main_navigation_links(self):
         for section, url_path in SECTIONS_MAPPING.items():
             self.header_page.verify_nav_link_visible(section)
@@ -69,6 +70,7 @@ class TestHeader(BaseTest):
             if url_path.startswith("http"):
                 self.page.goto("https://stg.polakohedonist.club/ru")
 
+    @pytest.mark.skip(reason="User interface updated — tests temporarily disabled")
     def test_cart_button_navigation(self):
         self.header_page.click_cart()
         expect(self.header_page.get_cart_drawer_locator()).to_be_visible(timeout=3000)

@@ -18,10 +18,12 @@ class TestLogin(BaseTest):
 
     def test_login_success(self):
         self.login_page.login_and_go_to_profile()
+        self.manager_profile.close_modal()
 
         self.user_profile.verify_logout_button_visible()
 
     def test_login_with_token(self, authenticated_page):
+        self.manager_profile.close_modal()
         self.user_profile.verify_logout_button_visible()
 
     def test_login_with_empty_password(self):
