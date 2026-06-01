@@ -36,6 +36,10 @@ jobs:
 
       - name: Run tests
         env:
+          STG_URL: ${{ secrets.STG_URL }}
+          PROD_URL: ${{ secrets.PROD_URL }}
+          VALID_EMAIL: ${{ secrets.VALID_EMAIL }}
+          VALID_PASSWORD: ${{ secrets.VALID_PASSWORD }}
           PYTHONPATH: ${{ github.workspace }}
         run: |
           pytest TP_Polako_E2E/tests/test_ci.py -v
