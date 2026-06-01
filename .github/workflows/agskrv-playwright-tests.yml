@@ -34,5 +34,7 @@ jobs:
           playwright install --with-deps chromium
 
       - name: Run tests
+        env:
+          PYTHONPATH: ${{ github.workspace }}
         run: |
           pytest TP_Polako_E2E/tests/test_ci.py -v
